@@ -1,0 +1,55 @@
+{
+  "name": "Create Zoom meeting",
+  "integrationType": "custom-rest-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "https://api.zoom.us/v2/users/${input.user}/meetings",
+      "requestType": "POST",
+      "headers": {
+        "authorization": "bearer ${authResponse.token}",
+        "content-type": "application/json"
+      },
+      "requestTemplate": "{\n  \"type\": 1}"
+    },
+    "response": {
+      "translationMap": {},
+      "translationMapDefaults": {},
+      "successTemplate": "${rawResult}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "timeZone": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "type": "object",
+        "properties": {
+          "join_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
