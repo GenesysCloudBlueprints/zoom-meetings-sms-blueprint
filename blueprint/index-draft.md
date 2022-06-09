@@ -61,47 +61,47 @@ To enable the Genesys Cloud instance to authenticate and retrieve user informati
 
    ![New registration for an Zoom app](images/ZoomBuildApp.png "Build Zoom App")
 
-3. Within the **JWT** box, click **Create**
+3. In the **JWT** box, click **Create**
 
    ![Select JWT](images/ZoomSelectJWT.png "Select JWT")
 
-4. Give your app a name, define the app type and toggle off Zoom App Marketplace publishing and click **Create**
+4. Give your app a name, define the app type, and turn off Zoom App Marketplace publishing. Then click **Create**
 
-5. Expand the **View JWT Token** section, set **Expire in:** to 'Other' and define your desired expiration date.
+5. Expand the **View JWT Token** section. Set **Expire in:** to **Other** and define your desired expiration date.
 
-6. Copy the JWT Token
+6. Click **Copy** to copy the JWT token.
 
-   ![Copy JWT Token](images/ZoomAppCredentials.png "JWT Token")
+   ![Copy JWT token](images/ZoomAppCredentials.png "Copy JWT token")
 
 
 ### Configure Genesys Cloud
 
 ### Add a web services data actions integration
-To enable communication from Genesys Cloud to Zoom, you must add a web services data actions integration:
+To enable communication from Genesys Cloud to Zoom, add a web services data actions integration.
 
-1. Install the **Web Services Data Actions** integration from Genesys Cloud. See [About the data actions integrations](https://help.mypurecloud.com/?p=209478 "Opens the data actions overview article").
+1. In Genesys Cloud, install a web services data actions integration. For more information, see [Add a data actions integration](https://help.mypurecloud.com/?p=177879 "Opens the Add a data actions integration article").
 
-   ![Web services data actions in Genesys Cloud integrations search](images/1AWebServicesDataActionInstall.png "Install web service data actions in Genesys Cloud")
+   ![Install web services data actions integration in Genesys Cloud](images/1AWebServicesDataActionInstall.png "Install web service data actions integration in Genesys Cloud")
 
-2. Rename the web services data action and provide a short description.
+2. Rename the web services data actions integration and provide a meaningful description.
 
-   ![Rename and short description for the web services data action](images/1BRenameWebServicesDataAction.png "Rename and provide short description for web services data action")
+   ![Rename and short description for the web services data actions integration](images/1BRenameWebServicesDataAction.png "Rename and provide short description for web services data actions integration")
 
 3. Navigate to **Configuration** > **Credentials** and click **Configure**.
 
-   ![Credentials configuration](images/1CConfigurationCredentials.png "Configure credentials for web services data action")
+   ![Configure credentials for web services data actions integration](images/1CConfigurationCredentials.png "Configure credentials for web services data actions integration")
 
-4. Select **User Defined** credential type, add the following field, enter the required values, and then click **OK**:
-
-* A: Set the token to the JWT Token from your Zoom app.
+4. Under **Credential Type**, click **User Defined**. Then click **Add Credential Field**. In the Field Name box, type token. In the Value box, paste the JWT token that you obtained when you [configured your Zoom custom app](#configure-the-zoom-custom-app "Goes to the Configure the Zoom custom app section" ). Then click **OK**.
 
    ![Configure credential fields and values](images/1DFieldsandValues.png "Select credential type and add field names and values")
 
-5. Import authentication data action
+5. Activate the integration and click **Save**.  
 
-   You import an authentication data action into another data action. When you add a new web services data actions integration within an organization, Genesys Cloud creates a **Custom Auth** data action automatically.
+### Import authentication data action
 
-   Navigate to **Integrations** > **Actions** and open the **Custom Auth** data action.
+You import an authentication data action into another data action. When you add a new web services data actions integration within an organization, Genesys Cloud creates a **Custom Auth** data action automatically.
+
+   1. Navigate to **Integrations** > **Actions** and open the **Custom Auth** data action.
 
    ![Custom Auth data action associated with web services data actions integration](images/1ECustomAuthDataAction.png "Open the custom auth data action associated with web services data action")
 
@@ -332,3 +332,4 @@ You can test the Send SMS data action within the data action.
 - [About Scripting](https://help.mypurecloud.com/?p=54284 "Opens the About scripting article in the Genesys Cloud Resource Center")
 - [Agentless SMS Notifications](https://developer.mypurecloud.com/api/tutorials/agentless-sms-notifications/index.html?language=java&step=1 "Opens the SMS tutorial") in the Genesys Cloud Developer Center
 - [Auto Send SMS](https://developer.mypurecloud.com/api/tutorials/sms-sending/index.html?language=nodejs&step=1 "Opens the SMS Sending tutorial") in the Genesys Cloud Developer Center
+* [About the web services data actions integration](https://help.mypurecloud.com/?p=127163 "Goes to the About the web services data actions integration article") in the Genesys Cloud Resource Center
