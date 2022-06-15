@@ -15,7 +15,7 @@ The following illustration shows the meeting scheduling solution from an agentâ€
 
 ![Zoom agent view](images/zoom-workflow.png "Meeting scheduling solution to use Zoom from an agent's point of view")
 
-The following shows the end-to-end customer and agent experience that this blueprint solution enables.
+The following video shows the end-to-end customer and agent experience that this blueprint solution enables.
 
 ![Overview](images/ZoomVideoSMSBlueprint.gif "Overview")
 
@@ -41,12 +41,14 @@ To enable an agent to create a Zoom meeting from their Genesys Cloud agent UI, y
 
 ### Genesys Cloud account
 
-* A Genesys Cloud 3 license with agentless SMS functionality. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the pricing article").
+* A Genesys Cloud 3 license. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the pricing article").
+* The GMA/Portico Non-conversational, bi-directional SMS, MMS, Email and RCS messaging product must be activated in your Genesys Cloud organization.
+* An SMS phone number purchased from your Genesys Cloud account. For information on how to purchase an SMS number, see [Purchase SMS long code numbers](https://help.mypurecloud.com/articles/purchase-sms-long-code-numbers/) in the Genesys Cloud Resource Center.
 * The Master Admin role in Genesys Cloud. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
 
 ### Zoom account
 
-* A Business Zoom account is required. Personal Zoom accounts do not support the OAuth client credential grant that this blueprint solution uses.
+* An Enterprise Zoom account is required.  
 * Admininstrator-level role to set up the required authorization and permissions for Genesys Cloud in Zoom.
 * Zoom license for each agent
 
@@ -54,7 +56,7 @@ To enable an agent to create a Zoom meeting from their Genesys Cloud agent UI, y
 
 ### Configure the Zoom custom app
 
-To enable Genesys Cloud to authenticate and retrieve user information from the Zoom API, register your custom application in Zoom.
+To enable Genesys Cloud to authorize and retrieve user information from the Zoom API, register your custom application in Zoom.
 
 1. Log in to the [Zoom App Marketplace](https://marketplace.zoom.us/ "Goes to the Zoom App Marketplace").
 2. Hover over **Develop** and click **Build App**.
@@ -191,9 +193,9 @@ To enable the **Send SMS** button, which sends the Zoom video session URL to the
 * [Create Zoom video meeting data action](#import-create-zoom-video-meeting-data-action "Goes to the Import Create Zoom video meeting data action section")
 * [Send SMS data action](#send-sms-data-action "Goes to the Send SMS data action section")
 
-### Import Create Zoom video meeting data action
+### Import the Create Zoom Meeting data action
 
-The Create Zoom Video Meeting data action uses the authenticated token that is supplied by other data actions to request a new Zoom video meeting URL.
+The Create Zoom Meeting data action uses the authenticated token that is supplied by other data actions to request a new Zoom video meeting URL.
 
 1. Download the *Create-Zoom-Meeting.custom.json* file from the [zoom-meetings-sms-blueprint repo](https://github.com/GenesysCloudBlueprints/zoom-meetings-sms-blueprint "Opens the zoom-meetings-sms-blueprint repo") in GitHub. Save this file in your local desktop. Later you will import it into Genesys Cloud.
 
@@ -214,7 +216,7 @@ This data action creates and sends an SMS message that contains the Zoom video m
 
    ![Import the data action](images/4AImportDataActions.png "Import the data action")
 
-3. Select the *Send-SMS.custom.json* file and associate with the web services data action you created in the [Add a web services data actions integration](#add-a-web-services-data-actions-integration "Goes to the Add a web services data actions integration section") section and click **Import Action**.
+3. Select the *Send-SMS.custom.json* file and associate it with the web services data action that you created in the [Add a web services data actions integration](#add-a-web-services-data-actions-integration "Goes to the Add a web services data actions integration section") section. Then click **Import Action**.
 
    ![Import the Send the SMS data action](images/5BImportSendSMSDataAction.png "Import the SMS data action")
 
@@ -244,7 +246,8 @@ You need to import the script *Send-SMS-with-Zoom-Video-URL.script* that referen
 
    ![Expand the first data action](images/expandFirstDataAction.png "Expand the First Data Action")
 
-7. From the **Category** list, select your "Create Zoom Meeting" data action.  From the **Data Action** drop menu, select your "Create Zoom Meeting" data action.
+7. From the **Category** list, select the category for your "Create Zoom Meeting" data action.  From the **Data Action** drop menu, select
+the data action that creates the Zoom meeting.
 
   ![Map the category and data action for the first data action](images/mapFirstDataAction.png "Map the category and data action for the first data action")
 
@@ -266,17 +269,13 @@ You need to import the script *Send-SMS-with-Zoom-Video-URL.script* that referen
 
    ![Expand the second data action](images/expandSecondDataAction.png "Expand the second data action")
 
-12. From the **Category** drop menu, select your "Send SMS" data action.  From the **Data Action** drop menu, select your "Send SMS" data action.
+12. From the **Category** drop menu, select your Zoom Send SMS data action.  From the **Data Action** drop menu, select your "Send SMS" data action.
 
  ![Map the category and data action for the second data action](images/mapSecondDataAction.png "Map the category and data action for the second data action")
 
 13. Expand the input variables for the second data action.
 
-14. In the **fromAddress** input variable field, type one of the SMS numbers that you purchased for your Genesys Cloud organization. Use the format,  +11234567890.
-
- :::primary
- **Note:** For information on how to purchase an SMS number, see [Purchase SMS long code numbers](https://help.mypurecloud.com/articles/purchase-sms-long-code-numbers/) in the Genesys Cloud Resource Center.
- :::
+14. In the **fromAddress** input variable field, type one of the SMS numbers that you purchased from your Genesys Cloud organization. Use the format,  +11234567890.
 
  ![Define the from address input variable](images/mapSecondDataActionFromAddressVariable.png "Define the from address input variable")
 
