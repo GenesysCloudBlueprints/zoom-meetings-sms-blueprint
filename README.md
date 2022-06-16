@@ -1,5 +1,5 @@
 
-#  Zoom meeting on Genesys Cloud Blueprint (Draft)
+#  Zoom meeting on Genesys Cloud Blueprint
 
 > View the full [Zoom meeting on Genesys Cloud Blueprint article](https://developer.mypurecloud.com/blueprints/zoom-meetings-sms/) in the Genesys Cloud Developer Center.
 
