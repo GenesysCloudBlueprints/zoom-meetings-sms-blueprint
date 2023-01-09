@@ -42,7 +42,7 @@ To enable an agent to create a Zoom meeting from their Genesys Cloud agent UI, y
 ### Genesys Cloud account
 
 * A Genesys Cloud 3 license. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the pricing article").
-* The GMA/Portico Non-conversational, bi-directional SMS, MMS, Email, and RCS messaging product must be activated in your Genesys Cloud organization.
+* The Messaging: Messaging & SMS Functionality product must be activated in your Genesys Cloud organization.
 * An SMS phone number purchased from your Genesys Cloud account. For information on how to purchase an SMS number, see [Purchase SMS long code numbers](https://help.mypurecloud.com/articles/purchase-sms-long-code-numbers/) in the Genesys Cloud Resource Center.
 * The Master Admin role in Genesys Cloud. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
 
@@ -136,7 +136,7 @@ When you add a new web services data actions integration within an organization,
 3. Search and select the Conversation>message>Create and messaging>sms>send permissions and then click **Save** to assign the appropriate permissions to your custom role.
 
 :::primary
-**Note:** Assign this custom role to your user record before you create the Genesys Cloud OAuth client. The messaging>sms>send permission requires the GMA/Portico Non-conversational, bi-directional SMS, MMS, Email, and RCS messaging product to be activated in your Genesys Cloud organization.
+**Note:** Assign this custom role to your user record before you create the Genesys Cloud OAuth client. The messaging>sms>* permission requires the Messaging: Messaging & SMS Functionality product to be activated in your Genesys Cloud organization.
 :::
 
   ![Add permissions to your custom role](images/assignPermissionToCustomRole.png "Add permissions to your custom role")
