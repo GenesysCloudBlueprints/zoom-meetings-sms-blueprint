@@ -6,14 +6,21 @@ icon: blueprint
 image: images/6COpenScriptDropdown.png
 category: 6
 summary: |
-  This Genesys Cloud Developer Blueprint explains how to set up Genesys Cloud and Zoom so that agents can schedule a Zoom meeting while they are interacting with customers as part of an inbound or outbound call. When an agent escalates to Zoom, Genesys Cloud automatically sends an SMS message with the meeting URL to the customer and also opens the Zoom meeting for the agent. The call must be in a queue in order for this solution to work.
+  This Genesys Cloud Developer Blueprint explains how to set up Genesys Cloud and Zoom so that agents can schedule a Zoom meeting while interacting with customers as part of an inbound or outbound call. When an agent escalates to Zoom, Genesys Cloud sends an SMS message to the customer with a meeting URL and opens Zoom for the agent. The call must be in a queue in order for this solution to work.
 ---
+:::{"alert":"primary","title":"About Genesys Cloud Blueprints","autoCollapse":false} 
+Genesys Cloud blueprints were built to help you jump-start building an application or integrating with a third-party partner. 
+Blueprints are meant to outline how to build and deploy your solutions, not a production-ready turn-key solution.
+ 
+For more details on Genesys Cloud blueprint support and practices 
+please see our Genesys Cloud blueprint [FAQ](https://developer.genesys.cloud/blueprints/faq)sheet.
+:::
 
-This Genesys Cloud Developer Blueprint explains how to set up Genesys Cloud and Zoom so that agents can schedule a Zoom meeting while they are interacting with customers as part of an inbound or outbound call. When an agent escalates to Zoom, Genesys Cloud automatically sends an SMS message with the meeting URL to the customer and also opens the Zoom meeting for the agent. The call must be in a queue in order for this solution to work.
+This Genesys Cloud Developer Blueprint explains how to set up Genesys Cloud and Zoom so that agents can schedule a Zoom meeting while interacting with customers as part of an inbound or outbound call. When an agent escalates to Zoom, Genesys Cloud sends an SMS message to the customer with a meeting URL and opens Zoom for the agent. The call must be in a queue in order for this solution to work.
 
 The following illustration shows the meeting scheduling solution from an agent’s point of view.
 
-![Zoom agent view](images/zoom-workflow.png "Meeting scheduling solution to use Zoom from an agent's point of view")
+![Zoom agent view](images/zoom-workflow.png "Meeting scheduling solution using Zoom from an agent's point of view")
 
 The following video shows the end-to-end customer and agent experience that this blueprint solution enables.
 
@@ -41,14 +48,14 @@ To enable an agent to create a Zoom meeting from their Genesys Cloud agent UI, y
 
 ### Genesys Cloud account
 
-* A Genesys Cloud 3 license. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the pricing article").
+* A Genesys Cloud 3 license with agentless SMS functionality. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the pricing article").
 * The Messaging: Messaging & SMS Functionality product must be activated in your Genesys Cloud organization.
 * An SMS phone number purchased from your Genesys Cloud account. For information on how to purchase an SMS number, see [Purchase SMS long code numbers](https://help.mypurecloud.com/articles/purchase-sms-long-code-numbers/) in the Genesys Cloud Resource Center.
 * The Master Admin role in Genesys Cloud. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
 
 ### Zoom account
 
-* An Enterprise Zoom account is required.  
+* An Enterprise Zoom account is required. The OAuth grant type of client_credentials used in this blueprint are not supported by personal Zoom accounts.  
 * Admininstrator-level role to set up the required authorization and permissions for Genesys Cloud in Zoom.
 * Zoom license for each agent
 
@@ -56,12 +63,12 @@ To enable an agent to create a Zoom meeting from their Genesys Cloud agent UI, y
 
 ### Configure the Zoom custom app
 
-To enable Genesys Cloud to authorize and retrieve user information from the Zoom API, register your custom application in Zoom.
+Register your custom application in Zoom to enable Genesys Cloud to authenticate and retrieve user information from the Zoom API.
 
 1. Log in to the [Zoom App Marketplace](https://marketplace.zoom.us/ "Goes to the Zoom App Marketplace").
 2. Hover over **Develop** and click **Build App**.
 
-   ![New registration for an Zoom app](images/ZoomBuildApp.png "Build Zoom App")
+   ![New registration for a Zoom app](images/ZoomBuildApp.png "Build Zoom App")
 
 3. In the **JWT** box, click **Create**
 
@@ -69,24 +76,24 @@ To enable Genesys Cloud to authorize and retrieve user information from the Zoom
 
 4. Give your app a name, define the app type, and turn off Zoom App Marketplace publishing. Then click **Create**
 
-5. Expand the **View JWT Token** section. Set **Expire in:** to **Other** and define your desired expiration date.
+5. Expand the **View JWT Token** section. Set **Expire in:** to **Other** and enter a desired expiration date.
 
-6. Click **Copy** to copy the JWT token.
+6. Click **Copy**.
 
-   ![Copy JWT token](images/ZoomAppCredentials.png "Copy JWT token")
+   ![JWT token](images/ZoomAppCredentials.png "Copy JWT token")
 
 
 ### Configure Genesys Cloud
 
 ### Add a web services data actions integration
 
-To enable communication from Genesys Cloud to Zoom, add a web services data actions integration.
+The following web services data actions integration enable communication from Genesys Cloud to Zoom:
 
-1. In Genesys Cloud, install a web services data actions integration. For more information, see [Add a data actions integration](https://help.mypurecloud.com/?p=177879 "Opens the Add a data actions integration article").
+1. In Genesys Cloud, install a **Web Services Data Actions** integration. For more information, see [About the data actions integrations](https://help.mypurecloud.com/?p=209478 "Opens the data actions overview article") in the Genesys Cloud Resource Center.
 
    ![Install a web services data actions integration in Genesys Cloud](images/1AWebServicesDataActionInstall.png "Install web service data actions integration in Genesys Cloud")
 
-2. Rename the web services data actions integration and provide a meaningful description.
+2. Rename the web services data actions integration and provide a short description.
 
    ![Rename and provide a short description for the web services data actions integration](images/1BRenameWebServicesDataAction.png "Rename and provide a short description for web services data actions integration")
 
@@ -94,7 +101,9 @@ To enable communication from Genesys Cloud to Zoom, add a web services data acti
 
    ![Configure credentials for the web services data actions integration](images/1CConfigurationCredentials.png "Configure credentials for the web services data actions integration")
 
-4. Under **Credential Type**, click **User Defined**. Then click **Add Credential Field**. In the Field Name box, type token. In the **Value** box, paste the JWT token that you obtained when you [configured your Zoom custom app](#configure-the-zoom-custom-app "Goes to the Configure the Zoom custom app section" ). Then click **OK**.
+4. Under **Credential Type**, click **User Defined**. Then click **Add Credential Field**. In the **Field Name** box, type token. In the **Value** box, paste the JWT token that you obtained when you [configured your Zoom custom app](#configure-the-zoom-custom-app "Goes to the Configure the Zoom custom app section" ). Then click **OK**.
+
+* Set the token to the JWT Token from your Zoom app.
 
    ![Configure credential fields and values](images/1DFieldsandValues.png "Select credential type and add field names and values")
 
@@ -102,13 +111,13 @@ To enable communication from Genesys Cloud to Zoom, add a web services data acti
 
 ### Import the authentication data action
 
-When you add a new web services data actions integration within an organization, Genesys Cloud creates a **Custom Auth** data action automatically. For this solution, you import this authentication data action into another data action.
+When you add a new web services data action integration within an organization, Genesys Cloud creates a **Custom Auth** data action automatically. For this solution, you import this authentication data action into another data action.
 
  1. In the Genesys Cloud **Admin** menu, navigate to **Integrations** > **Actions** and open the **Custom Auth** data action.
 
  ![Open the custom auth data action that is associated with the web services data actions integration](images/1ECustomAuthDataAction.png "Open the custom auth data action that is associated with the web services data actions integration")
 
- 2. At the bottom of the Custom Auth data action page, click **Viewing** and change the status of the data action from **Published** to **Draft**.
+ 2. At the bottom of the Custom Auth data action page, click **Viewing** and change the data action from **Published** to **Draft**.
  3. From the [zoom-meetings-sms-blueprint GitHub repository](https://github.com/GenesysCloudBlueprints/zoom-meetings-sms-blueprint "Opens the zoom-meetings-sms-blueprint GitHub repository"), download the Zoom-SMS-Video-Send-Web-Services-Data-Action-Auth.customAuth.json file. Save this file to your local desktop.
  4. In Genesys Cloud, click **Import** and browse to select the downloaded file.
     ![Import the custom authentication data action file](images/1FOpenCustomAuthDataAction.png "Import the custom authentication data action file")
@@ -124,7 +133,7 @@ When you add a new web services data actions integration within an organization,
  6. Click **Save & Publish**.
  7. Return to the web services data action integration and verify that the data action has the **Active** status.
 
-### Create a custom role for use with Genesys Cloud OAuth client
+### Use Genesys Cloud OAuth client to create a custom role
 
 1. In the Genesys Cloud **Admin** menu, navigate to **People & Permissions** > **Roles/Permissions** and a role for this solution.
    ![Add a custom role for this solution](images/createRole.png "Add Custom Role")
@@ -133,16 +142,16 @@ When you add a new web services data actions integration within an organization,
 
   ![Name your custom role](images/nameCustomRole.png "Name your custom role")
 
-3. Search and select the Conversation>message>Create and messaging>sms>send permissions and then click **Save** to assign the appropriate permissions to your custom role.
+3. Search and select the **Conversation>message>Create** and **messaging>sms>send** permissions and then click **Save** to assign the appropriate permissions to your custom role.
 
 :::primary
-**Note:** Assign this custom role to your user record before you create the Genesys Cloud OAuth client. The messaging>sms>* permission requires the Messaging: Messaging & SMS Functionality product to be activated in your Genesys Cloud organization.
+**Note:** Assign this custom role to your user record before creating the Genesys Cloud OAuth client. The messaging>sms>* permission requires the GMA/Portico: Non conversational bi-directional SMS, MMS, Email and RCS messaging product to be activated in your Genesys Cloud organization.
 :::
 
   ![Add permissions to your custom role](images/assignPermissionToCustomRole.png "Add permissions to your custom role")
 
 
-### Create an OAuth client for use with the Genesys Cloud data actions integration
+### Integrate Genesys Cloud data actions with an OAuth client
 
 To enable Genesys Cloud data action to make requests to an organization, you must use an OAuth client to configure authentication with Genesys Cloud.
 
@@ -203,7 +212,7 @@ The Create Zoom Meeting data action uses the authenticated token that is supplie
 
    ![Import the data action](images/4AImportDataActions.png "Import the data action")
 
-3. Select the *Create-Zoom-Meeting.custom.json* file and associate with the web services data action integration that you created in the [Add a web services data actions integration](#add-a-web-services-data-actions-integration "Goes to the Add a web services data actions integration section") section and click **Import Action**.
+3. Select the *Create-Zoom-Meeting.custom.json* file and associate it with the web services data action integration that you created in the [Add a web services data actions integration](#add-a-web-services-data-actions-integration "Goes to the Add a web services data actions integration section") section and click **Import Action**.
 
    ![Import the Create Zoom video meeting data action](images/4BImportCreateZoomVideoMeetingDataAction.png "Select the Create Zoom meeting JSON file to import it")
 
@@ -222,7 +231,7 @@ This data action creates and sends an SMS message that contains the Zoom video m
 
 ### Import and publish the script
 
-You need to import the script *Send-SMS-with-Zoom-Video-URL.script* that references the created data actions. The script generates the **Escalate to Zoom** button for agents during an active interaction with the customer. It also sends an SMS that contains the Zoom video URL to the customer.
+You need to import the script *Send-SMS-with-Zoom-Video-URL.script* that references the created data actions. The script generates the **Escalate to Zoom** button for agents when they are engaged in an active customer interaction. In addition, an SMS is sent to the customer with the Zoom video URL.
 
 1. Download the *Send-SMS-with-Zoom-Video-URL.script* file from the [zoom-meetings-sms-blueprint](https://github.com/GenesysCloudBlueprints/zoom-meetings-sms-blueprint "Opens the zoom-meetings-sms-blueprint") GitHub repository. Save this file to your local desktop to import it into Genesys Cloud.
 
@@ -246,8 +255,7 @@ You need to import the script *Send-SMS-with-Zoom-Video-URL.script* that referen
 
    ![Expand the first data action](images/expandFirstDataAction.png "Expand the First Data Action")
 
-7. From the **Category** list, select the category for your "Create Zoom Meeting" data action.  From the **Data Action** list, select
-the data action that creates the Zoom meeting.
+7. From the **Category** list, select the category for your "Create Zoom Meeting" data action. From the **Data Action** list, select the data action associated with your "Create Zoom Meeting".
 
   ![Map the category and data action for the first data action](images/mapFirstDataAction.png "Map the category and data action for the first data action")
 
@@ -258,7 +266,7 @@ the data action that creates the Zoom meeting.
 9. Type the desired value in the **user** input variable.
 
   :::primary
-  **Note:** The variable value in the following example creates a Zoom meeting through the agent's Zoom account.  For this to work, the agent's Genesys Cloud email address must match their Zoom email address.  If you'd like to use the same Zoom account to create the Zoom meeting regardless of which agent is on the interaction, you can define a static value here.  It can be either the email address or object ID of a person in the Zoom Activity Directory where your app is registered.
+  **Note:** The variable value in the following example creates a Zoom meeting through the agent's Zoom account. For this to work, the agent's Genesys Cloud email address must match their Zoom email address. If you'd like to use the same Zoom account to create the Zoom meeting regardless of which agent is on the interaction, you can define a static value here. This can be either the email address or object ID of a person in the Zoom Activity Directory where your app is registered.
   :::
 
 10. Expand the output variables for the first data action.
@@ -269,17 +277,17 @@ the data action that creates the Zoom meeting.
 
    ![Expand the second data action](images/expandSecondDataAction.png "Expand the second data action")
 
-12. From the **Category** list, select your Zoom Send SMS data action.  From the **Data Action** list, select your "Send SMS" data action.
+12. From the **Category** list, select your Zoom Send SMS data action. From the **Data Action** list, select your "Send SMS" data action.
 
  ![Map the category and data action for the second data action](images/mapSecondDataAction.png "Map the category and data action for the second data action")
 
 13. Expand the input variables for the second data action.
 
-14. In the **fromAddress** input variable field, type one of the SMS numbers that you purchased from your Genesys Cloud organization. Use the format,  +11234567890.
+14. In the **fromAddress** input variable field, type one of the SMS numbers that you purchased from your Genesys Cloud organization. Use the format, +11234567890.
 
  ![Define the from address input variable](images/mapSecondDataActionFromAddressVariable.png "Define the from address input variable")
 
-15. Confirm the remaining input variables of the second data action match the example below.
+15. Confirm the remaining input variables of the second data action match the following example.
 
  ![Map the input variables for the second data action](images/mapSecondDataActionVariables.png "Map the input variables for the second data action")
 
@@ -297,7 +305,7 @@ the data action that creates the Zoom meeting.
 
 19. In the Genesys Cloud **Admin** menu, navigate to **Contact Center** > **Queues** and select the queue you'd like to associate with this script.
 
-20. Click the **Voice** tab. From the **Default Script** list, select the "Send-SMS-with-Zoom-Video-URL" script.
+20. Click the **Voice** tab. From the **Default Script** list, select the **Send-SMS-with-Zoom-Video-URL** script.
 
     ![Select the Send-SMS-with-Zoom-Video-URL script](images/selectDefaultScriptForQueue.png "Select the Send-SMS-with-Zoom-Video-URL script")
 
@@ -305,7 +313,7 @@ the data action that creates the Zoom meeting.
 
 Test the Create Zoom video meeting URL data action from within the data action.
 
-1. In the Genesys Cloud **Admin** menu, navigate to **Integrations** > **Actions** and select the Create Zoom Video Meeting data action.
+1. In the Genesys Cloud **Admin** menu, navigate to **Integrations** > **Actions** and select the **Create Zoom meeting** data action.
 
 
 2. Navigate to **Setup** > **Test**, enter your user, startTime, endTime and timeZone, and then click **Run Action**.
@@ -318,13 +326,13 @@ Test the Create Zoom video meeting URL data action from within the data action.
 
 Test the Send SMS data action from within the data action.
 
-1. In the Genesys Cloud **Admin** menu, navigate to **Integrations** > **Actions**, and select the Send SMS data action.
+1. In the Genesys Cloud **Admin** menu, navigate to **Integrations** > **Actions**, and select the **Send SMS** data action.
 
 
-2. Navigate to **Setup** > **Test**, enter your user, startTime, endTime and timeZone, and then click **Run Action**.
+2. Navigate to **Setup** > **Test**, enter your **user**, **startTime**, **endTime** and **timeZone**, and then click **Run Action**.
 
    :::primary
-   **Note:** The fromAddress parameter must be one of the purchased SMS Numbers within your Genesys Cloud organization. See additional resource below for detailed steps for purchasing an SMS number.  The toAddressMessengerType must be "sms".
+   **Note:** The fromAddress parameter must be one of the purchased SMS Numbers within your Genesys Cloud organization. For more information on how to purchase an SMS number, refer to the following resources. The toAddressMessengerType must be "sms".
    :::
 
   ![Test the Send SMS data action](images/testSendSMSDataAction.png "Test the Send SMS deployment")
