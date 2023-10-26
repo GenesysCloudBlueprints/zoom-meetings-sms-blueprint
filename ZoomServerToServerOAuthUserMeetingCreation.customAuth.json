@@ -1,0 +1,42 @@
+{
+  "name": "ZoomServerToServerOAuth_UserMeetingCreation",
+  "integrationType": "custom-rest-actions",
+  "actionType": "customAuth",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "${credentials.loginUrl}",
+      "requestType": "POST",
+      "headers": {
+        "Authorization": "Basic $encoding.base64(\"${credentials.clientId}:${credentials.clientSecret}\")",
+        "Content-Type": "application/json",
+        "grant_type": "client_credentials"
+      },
+      "requestTemplate": "${input.rawRequest}"
+    },
+    "response": {
+      "translationMap": {},
+      "translationMapDefaults": {},
+      "successTemplate": "${rawResult}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Auth Input",
+        "description": "No Input Value",
+        "type": "object",
+        "properties": {}
+      }
+    },
+    "output": {
+      "successSchema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
