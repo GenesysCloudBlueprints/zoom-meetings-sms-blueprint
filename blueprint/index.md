@@ -8,11 +8,11 @@ category: 6
 summary: |
   This Genesys Cloud Developer Blueprint explains how to set up Genesys Cloud and Zoom so that agents can schedule a Zoom meeting while interacting with customers as part of an inbound or outbound call. When an agent escalates to Zoom, Genesys Cloud sends an SMS message to the customer with a meeting URL and opens Zoom for the agent. The call must be in a queue in order for this solution to work.
 ---
-:::{"alert":"primary","title":"About Genesys Cloud Blueprints","autoCollapse":false} 
-Genesys Cloud blueprints were built to help you jump-start building an application or integrating with a third-party partner. 
+:::{"alert":"primary","title":"About Genesys Cloud Blueprints","autoCollapse":false}
+Genesys Cloud blueprints were built to help you jump-start building an application or integrating with a third-party partner.
 Blueprints are meant to outline how to build and deploy your solutions, not a production-ready turn-key solution.
- 
-For more details on Genesys Cloud blueprint support and practices 
+
+For more details on Genesys Cloud blueprint support and practices
 please see our Genesys Cloud blueprint [FAQ](https://developer.genesys.cloud/blueprints/faq)sheet.
 :::
 
@@ -61,77 +61,71 @@ To enable an agent to create a Zoom meeting from their Genesys Cloud agent UI, y
 
 ## Implementation steps
 
-### Configure the Zoom custom app
+## Configure the Zoom custom app
 
-Register your custom application in Zoom to enable Genesys Cloud to authenticate and retrieve user information from the Zoom API.
+To enable Genesys Cloud to authorize and retrieve user information from the Zoom API, register your custom application in Zoom.
 
 1. Log in to the [Zoom App Marketplace](https://marketplace.zoom.us/ "Goes to the Zoom App Marketplace").
-2. Hover over **Develop** and click **Build App**.
+2. From the **Develop** menu, click **Build App**.
 
-   ![New registration for a Zoom app](images/ZoomBuildApp.png "Build Zoom App")
+   ![New registration for a Zoom app](images/ZoomBuildApp.png "New registration for a Zoom app")
 
-3. In the **JWT** box, click **Create**
+3. In the **Server-to-Server OAuth** box, click **Create**
 
-   ![Select JWT](images/ZoomSelectJWT.png "Select JWT")
+   ![Select Server-to-Server OAuth](images/ZoomSelectS2SOAuth.png "Select Server-to-Server OAuth")
 
-4. Give your app a name, define the app type, and turn off Zoom App Marketplace publishing. Then click **Create**
+4. Copy the **Account ID**, **Client ID** and **Client Secret**. Store them in a secure place to reference later.
 
-5. Expand the **View JWT Token** section. Set **Expire in:** to **Other** and enter a desired expiration date.
+![Copy credentials](images/ZoomAppCredentials0.png "Copy credentials")
 
-6. Click **Copy**.
+5. Click **Continue**.
 
-   ![JWT token](images/ZoomAppCredentials.png "Copy JWT token")
+6. Give your app a name, short description and company name. Then click **Continue** to the **Scopes** section.
 
+7. In **Scopes**, add the **View users information and manage users** scope. Click **Continue**.
+
+![Select Scopes](images/ZoomSelectScopes.png "Select Scopes")
+
+8. Ensure your app is activated on the account.
+
+![Activated App](images/ZoomActivatedApp.png "Activated App")
 
 ### Configure Genesys Cloud
 
 ### Add a web services data actions integration
 
-The following web services data actions integration enable communication from Genesys Cloud to Zoom:
+To enable communication from Genesys Cloud to Zoom, add a web services data actions integration:
 
-1. In Genesys Cloud, install a **Web Services Data Actions** integration. For more information, see [About the data actions integrations](https://help.mypurecloud.com/?p=209478 "Opens the data actions overview article") in the Genesys Cloud Resource Center.
+1. In Genesys Cloud, navigate to **Admin** > **Integrations** and install a **Web Services Data Actions** integration. For more information, see [About the data actions integrations](https://help.mypurecloud.com/?p=209478 "Opens the data actions overview article") in the Genesys Cloud Resource Center.
 
-   ![Install a web services data actions integration in Genesys Cloud](images/1AWebServicesDataActionInstall.png "Install web service data actions integration in Genesys Cloud")
+   ![Install the Web Services Data Actions integration](images/1AWebServicesDataActionInstall.png "Install the Web Services Data Actions integration")
 
 2. Rename the web services data actions integration and provide a short description.
 
-   ![Rename and provide a short description for the web services data actions integration](images/1BRenameWebServicesDataAction.png "Rename and provide a short description for web services data actions integration")
+   ![Rename the data action](images/1BRenameWebServicesDataAction.png "Rename the data action")
 
-3. Navigate to **Configuration** > **Credentials** and click **Configure**.
+3. Click **Configuration** > **Credentials** and then click **Configure**.
 
-   ![Configure credentials for the web services data actions integration](images/1CConfigurationCredentials.png "Configure credentials for the web services data actions integration")
+   ![Configure integration credentials](images/1CConfigurationCredentials.png "Configure integration credentials")
 
-4. Under **Credential Type**, click **User Defined**. Then click **Add Credential Field**. In the **Field Name** box, type token. In the **Value** box, paste the JWT token that you obtained when you [configured your Zoom custom app](#configure-the-zoom-custom-app "Goes to the Configure the Zoom custom app section" ). Then click **OK**.
+4. From the **Credential Type** list, select **User Defined**. Then click **Add Credential Field** to create three fields. In the field names, type "loginUrl", "clientId" and "clientSecret".  For the "loginUrl", type "https://zoom.us/oauth/token?grant_type=account_credentials&account_id={{your_account_id}}" where {{your_account_id}} is replaced with the Account ID you copied from your Zoom Server to Server OAuth app.  For "clientId" and "clientSecret", paste the corresponding values from your Zoom Server to Server OAuth app.  Then click **OK**.
 
-* Set the token to the JWT Token from your Zoom app.
+   ![Configure integration credentials](images/1DFieldsandValues0.png "Configure integration credentials")
 
-   ![Configure credential fields and values](images/1DFieldsandValues.png "Select credential type and add field names and values")
+5. Activate the integration and click **Save**.
 
-5. Activate the integration and click **Save**.  
+### Import the Custom Auth Data action
 
-### Import the authentication data action
+This data action calls the Zoom API to generate an OAuth bearer token from your Zoom Server to Server OAuth app.
 
-When you add a new web services data action integration within an organization, Genesys Cloud creates a **Custom Auth** data action automatically. For this solution, you import this authentication data action into another data action.
+1. from the [update-zoom-presence-from-inbound-interaction repo](https://github.com/GenesysCloudBlueprints/zoom-meetings-sms-blueprint) GitHub repository, download the ZoomServerToServerOAuthUserMeetingCreation.customAuth.json file.
+2. In Genesys Cloud, navigate to **Admin** > **Integrations** > **Actions** and click **Import**.
 
- 1. In the Genesys Cloud **Admin** menu, navigate to **Integrations** > **Actions** and open the **Custom Auth** data action.
+   ![Import the data action](images/4AImportDataActions.png "Import the data action")
 
- ![Open the custom auth data action that is associated with the web services data actions integration](images/1ECustomAuthDataAction.png "Open the custom auth data action that is associated with the web services data actions integration")
+3. Select the ZoomServerToServerOAuthUserMeetingCreation.customAuth.json file and associate with the web services integration you created in the [Add a web services data actions integration](#add-a-web-services-data-actions-integration "Goes to the Add a web services data actions integration section") section, and then click **Import Action**.
 
- 2. At the bottom of the Custom Auth data action page, click **Viewing** and change the data action from **Published** to **Draft**.
- 3. From the [zoom-meetings-sms-blueprint GitHub repository](https://github.com/GenesysCloudBlueprints/zoom-meetings-sms-blueprint "Opens the zoom-meetings-sms-blueprint GitHub repository"), download the Zoom-SMS-Video-Send-Web-Services-Data-Action-Auth.customAuth.json file. Save this file to your local desktop.
- 4. In Genesys Cloud, click **Import** and browse to select the downloaded file.
-    ![Import the custom authentication data action file](images/1FOpenCustomAuthDataAction.png "Import the custom authentication data action file")
-
- 5. Click **Import Action**.
-
-    :::primary
-    **Note:** In the Publish Action window, click **Yes** to publish the data action. The Import Action button modifies only the data action configuration and not the data action contract.
-    :::
-
-    ![Import custom authentication data action](images/1GImportCustomAuthDataAction.png "Import the custom auth data action for web services data action")
-
- 6. Click **Save & Publish**.
- 7. Return to the web services data action integration and verify that the data action has the **Active** status.
+   ![Import the Zoom Meeting Creation data action](images/4AImportCustomAuthDataActions.png "Import the Zoom Custom Auth data action")
 
 ### Use Genesys Cloud OAuth client to create a custom role
 
